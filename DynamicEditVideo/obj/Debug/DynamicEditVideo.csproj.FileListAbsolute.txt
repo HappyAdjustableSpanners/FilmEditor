@@ -1,0 +1,26 @@
+c:\users\jonny\source\repos\DynamicEditVideo\DynamicEditVideo\bin\Debug\DynamicEditVideo.exe.config
+c:\users\jonny\source\repos\DynamicEditVideo\DynamicEditVideo\bin\Debug\DynamicEditVideo.exe
+c:\users\jonny\source\repos\DynamicEditVideo\DynamicEditVideo\bin\Debug\DynamicEditVideo.pdb
+c:\users\jonny\source\repos\DynamicEditVideo\DynamicEditVideo\obj\Debug\DynamicEditVideo.csprojResolveAssemblyReference.cache
+c:\users\jonny\source\repos\DynamicEditVideo\DynamicEditVideo\obj\Debug\DynamicEditVideo.csproj.CoreCompileInputs.cache
+c:\users\jonny\source\repos\DynamicEditVideo\DynamicEditVideo\obj\Debug\DynamicEditVideo.exe
+c:\users\jonny\source\repos\DynamicEditVideo\DynamicEditVideo\obj\Debug\DynamicEditVideo.pdb
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\bin\Debug\DynamicEditVideo.exe.config
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\bin\Debug\DynamicEditVideo.exe
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\bin\Debug\DynamicEditVideo.pdb
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\obj\Debug\DynamicEditVideo.csprojResolveAssemblyReference.cache
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\obj\Debug\DynamicEditVideo.csproj.CoreCompileInputs.cache
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\obj\Debug\DynamicEditVideo.exe
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\obj\Debug\DynamicEditVideo.pdb
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\bin\Debug\FFmpeg.dll
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\obj\Debug\DynamicEditVideo.csproj.CopyComplete
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\bin\Debug\Hudl.FFmpeg.Core.dll
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\bin\Debug\Hudl.FFmpeg.dll
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\bin\Debug\Hudl.FFprobe.dll
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\bin\Debug\log4net.dll
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\bin\Debug\Newtonsoft.Json.dll
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\bin\Debug\Hudl.FFmpeg.pdb
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\bin\Debug\Hudl.FFmpeg.Core.pdb
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\bin\Debug\Hudl.FFprobe.pdb
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\bin\Debug\log4net.xml
+C:\Users\jonny\Documents\Projects\Local Projects\filmily\DynamicEditVideo\DynamicEditVideo\bin\Debug\Newtonsoft.Json.xml
