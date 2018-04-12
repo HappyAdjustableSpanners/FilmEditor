@@ -23,9 +23,6 @@ namespace DynamicEditVideo
         {
             string cmd = String.Format("-y -i \"{0}\" -ss {1} -t {2} -vcodec copy -acodec copy \"{3}.mp4\"", inPath, start, duration, outPath);
             FFMPEGExecuter.ExecuteFFMPEG(cmd);
-
-            cmd = String.Format("-y -i \"{0}\" -ss {1} -t {2} -vcodec copy -acodec libmp3lame \"{3}.mp3\"", inPath, start, duration, outPath);
-            FFMPEGExecuter.ExecuteFFMPEG(cmd);
         }
 
         public static void GetAndSaveVideo(string inPath, string outPath)
@@ -71,7 +68,7 @@ namespace DynamicEditVideo
 
             //select the first two video streams and run concat filter
             var videoConcat = command.Select(command.Take(0), command.Take(1), command.Take(2))
-                .Filter(Filterchain.FilterTo<VideoStream>(new Hudl.FFmpeg.Filters.Concat));
+                .Filter(Filterchain.FilterTo<VideoStream>(new Hudl.FFmpeg.Filters.Concat()));
 
             //select the first two audio streams and run concat filter
             var audioConcat = command.Select(command.Take(3), command.Take(4), command.Take(5))
@@ -107,10 +104,47 @@ namespace DynamicEditVideo
             FFMPEGExecuter.ExecuteFFMPEG(cmd);
         }
 
-        public static void AddTransition(string video1, string video2)
+        public static void AddTransition(string video1, float v1Duration, string video2, float v2Duration, string outputPath)
         {
-         
+          
 
+            //Construct ffmpeg command
+            //Read in the input and create a filter complex
+            string s1 = String.Format("-y -i \"{0}\" -i \"{1}\" -filter_complex \"", video1, video2);
+
+            //Break the two videos into 2 parts each (so 4 parts total). 1st video is split into (content+fade-out), 2nd video is split into (fadeIn+content)
+
+            //Trim first clip to start at 0 and end at video length
+            string s2 = String.Format("[0:v]trim=start=0:end=\"{0}\",setpts=PTS-STARTPTS[firstclip];", v1Duration - 1);
+
+            //Trim second clip to start at 1
+            string s3 = String.Format("[1:v]trim=start=1,setpts=PTS-STARTPTS[secondclip];");
+
+            //trim the final second of the video to use as the fade out. This subsection would normally keep its timestamps, but we set it to 0 using setpts=PTS-STARTPTS
+            string s4 = String.Format("[0:v]trim=start=\"{0}\":end=\"{1}\",setpts=PTS-STARTPTS[fadeoutsrc];", v1Duration - 1, v1Duration);
+
+            //trim the first second of the second video to fade out. This subsection would normally keep its timestamps, but we set it to 0 using setpts=PTS-STARTPTS
+            string s5 = String.Format("[1:v]trim=start=0:end=1,setpts=PTS-STARTPTS[fadeinsrc];");
+
+            //Now to actually fade in/out we need to specify a pixel format that has an alpha channel, so we use yuva420p.
+            string s6 = String.Format("[fadeinsrc]format=pix_fmts=yuva420p, fade=t=in:st=0:d=1:alpha=1[fadein];[fadeoutsrc]format=pix_fmts=yuva420p,fade=t=out:st=0:d=1:alpha=1[fadeout];");
+
+            //Ensure there is buffer space available in the buffer complex. It is actually an ffmpeg bug that this is not done by default
+            string s7 = String.Format("[fadein]fifo[fadeinfifo];[fadeout]fifo[fadeoutfifo];");
+
+            //Overlay the fade in and fade out to create the crossfade effect
+            string s8 = String.Format("[fadeoutfifo][fadeinfifo]overlay[crossfade];");
+
+            //Put the sections together
+            string s9 = String.Format("[firstclip][crossfade][secondclip]concat=n=3[output];");
+
+            //Add back in the audio
+            string s10 = String.Format("[0:a][1:a]acrossfade=d=1[audio]\" -map \"[output]\" -map \"[audio]\" \"{0}\"", outputPath);
+
+            //Create the argument list
+            string cmd = s1 + s2 + s3 + s4 + s5 + s6 + s7 + s8 + s9 + s10;
+            FFMPEGExecuter.ExecuteFFMPEG(cmd);
+            
         }
 
         public static void ConcatVideosDemux(string partsTxtPath, string outPath)

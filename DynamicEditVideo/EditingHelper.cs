@@ -44,7 +44,7 @@ namespace DynamicEditVideo
                     min = numVideos;
                 }
             }
-            return min / 2;
+            return min;
         }
 
         private static void CreateVideo(EditConfig config, int count)
@@ -53,56 +53,44 @@ namespace DynamicEditVideo
             // get
             string[] folders = Directory.GetDirectories(DirectoryHelper.GetParentFolderDir() + "\\tmp");
 
-            List<string> vparts = new List<string>();
-            List<string> aparts = new List<string>();
+            List<string> parts = new List<string>();
 
             //Get min amount of videos in all the folders
             int min = GetMinVideos(folders);
 
-            vparts.Add(DirectoryHelper.GetParentFolderDir() + "\\tmp\\intro.mp4");
-            aparts.Add(DirectoryHelper.GetParentFolderDir() + "\\tmp\\intro.mp3");
+            parts.Add(DirectoryHelper.GetParentFolderDir() + "\\tmp\\intro.mp4");
             for (int j = 0; j < min; j++)
             {
                 for (int i = 0; i < folders.Length; i++)
                 {
-                    vparts.Add(folders[i] + "\\" + j + ".mp4");
-                    aparts.Add(folders[i] + "\\" + j + ".mp3");
+                    parts.Add(folders[i] + "\\" + j + ".mp4");
                 }
             }
-            vparts.Add(DirectoryHelper.GetParentFolderDir() + "\\tmp\\outro.mp4");
-            aparts.Add(DirectoryHelper.GetParentFolderDir() + "\\tmp\\outro.mp3");
+            parts.Add(DirectoryHelper.GetParentFolderDir() + "\\tmp\\outro.mp4");
 
-            // Create a txt file, a list of all files to be concatenated
-            string partsTxtPath = DirectoryHelper.GetParentFolderDir() + "\\tmp\\parts.txt";
-            List<string> vpartTxts = new List<string>();
-            List<string> apartTxts = new List<string>();
-            if (config.introPath != "none")
-            {
-                string newPart = "file '" + config.introPath.PadLeft('5') + "'";
-                //partTxts.Add(newPart);
-            }
-            foreach(string part in vparts)
-            {
-                string newPart = "file '" + part.PadLeft('5') + "'"; ;
-                //partTxts.Add(newPart);
-                vpartTxts.Add(part);
-            }
-            foreach(string part in aparts)
-            {
-                apartTxts.Add(part);
-            }
             if (config.outroPath != "none")
             {
                 //string newPart = "file '" + config.outroPath.PadLeft('5') + "'";
                 //partTxts.Add(newPart);
                 //vpartTxts.Add(config.outroPath);
             }
-            //System.IO.File.WriteAllLines(partsTxtPath, partTxts.ToArray());
 
             DirectoryInfo concatVideoPath = Directory.CreateDirectory(DirectoryHelper.GetParentFolderDir() + "\\output\\" + count + "\\");
             string path = concatVideoPath.FullName + config.editPreset.ToString() + ".mp4";
-            //FFMPEGCommands.ConcatVideos(partTxts.ToArray(), path );
-            FFMPEGCommands.ConcatHudl(vpartTxts.ToArray(), apartTxts.ToArray(), path);
+            
+            //for(int i = 0; i < parts.Count(); i++)
+            //{
+            //    FFMPEGCommands.AddTransition(
+            //        parts[0], 
+            //        GetVideoDuration(parts[0]), 
+            //        parts[1], GetVideoDuration(parts[1]),
+            //        DirectoryHelper.AddBeforeExtension(path, "_trans"));
+
+            //}
+            FFMPEGCommands.AddTransition(parts[0], GetVideoDuration(parts[0]), parts[1], GetVideoDuration(parts[1]), DirectoryHelper.AddBeforeExtension(path, "_trans"));
+            FFMPEGCommands.ConcatVideos(parts.ToArray(), path );
+           
+            //FFMPEGCommands.ConcatHudl(vpartTxts.ToArray(), apartTxts.ToArray(), path);
          
             if (config.backingMusicPath != "none")
             {
