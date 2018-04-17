@@ -19,9 +19,23 @@ namespace DynamicEditVideo
 {
     class FFMPEGCommands
     {
+        //Get video duration from path
+        public static float GetVideoDuration(string path)
+        {
+            string arguments = String.Format("-i \"{0}\" -show_entries format=duration -v quiet -of csv=\"p = 0\"", path);
+            string result = FFMPEGExecuter.ExecuteFFProbe(arguments);
+            return float.Parse(result);
+        }
+
         public static void GetAndSaveVideoSection(string inPath, string outPath, float start, float duration)
         {
-            string cmd = String.Format("-y -i \"{0}\" -ss {1} -t {2} -vcodec copy -acodec copy \"{3}.mp4\"", inPath, start, duration, outPath);
+            string cmd = String.Format("-y -i \"{0}\" -ss {1} -t {2} -c:v libx264 -acodec copy \"{3}.mp4\"", inPath, start, duration, outPath);
+            FFMPEGExecuter.ExecuteFFMPEG(cmd);
+        }
+
+        public static void GetAndSaveVideoSectionReEncode(string inPath, string outPath, float start, float duration)
+        {
+            string cmd = String.Format("-y -i \"{0}\" -ss {1} -t {2} -c:v libx264 -acodec copy \"{3}.mp4\"", inPath, start, duration, outPath);
             FFMPEGExecuter.ExecuteFFMPEG(cmd);
         }
 
@@ -104,10 +118,41 @@ namespace DynamicEditVideo
             FFMPEGExecuter.ExecuteFFMPEG(cmd);
         }
 
+        public static void ConcatVideosDemux(string partsTxtPath, string outPath)
+        {
+            string cmd = String.Format("-y -f concat -safe 0 -i \"{0}\" -c:v libx264 \"{1}\"", partsTxtPath, outPath);
+            FFMPEGExecuter.ExecuteFFMPEG(cmd);
+        }
+
+        public static void ConcatVideosNoReencode(string[] parts, string outPath)
+        {
+            //return String.Format("-y -f concat -safe 0 -i \"{0}\" -c:v libx264 \"{1}\"", partsTxtPath, outPath);
+
+            //convert the .mp4 files to intermediate .TS
+            string cmd2 = "-y -i \"concat:";
+
+            for (int i = 0; i < parts.Length; i++)
+            {
+                string outP = DirectoryHelper.GetParentFolderDir() + "\\ts\\clip" + i + ".ts";
+                string cmd1 = String.Format("-y -i \"{0}\" -c copy -bsf:v h264_mp4toannexb -f mpegts \"{1}\"", parts[i], outP);
+                FFMPEGExecuter.ExecuteFFMPEG(cmd1);
+
+                cmd2 += outP;
+                if (i < parts.Length - 1)
+                {
+                    cmd2 += "|";
+                }
+            }
+
+            //concatenate the TS files and convert the output back to mp4
+            string options = "-bsf:a aac_adtstoasc -movflags faststart";
+            cmd2 += String.Format("\" -c copy -video_track_timescale 25 {0} -f mp4 -threads 1 \"{1}\"", options, outPath);
+            FFMPEGExecuter.ExecuteFFMPEG(cmd2);
+        }
+
         public static void AddTransition(string video1, float v1Duration, string video2, float v2Duration, string outputPath)
         {
           
-
             //Construct ffmpeg command
             //Read in the input and create a filter complex
             string s1 = String.Format("-y -i \"{0}\" -i \"{1}\" -filter_complex \"", video1, video2);
@@ -147,43 +192,11 @@ namespace DynamicEditVideo
             
         }
 
-        public static void ConcatVideosDemux(string partsTxtPath, string outPath)
-        {
-            string cmd = String.Format("-y -f concat -safe 0 -i \"{0}\" -c:v libx264 \"{1}\"", partsTxtPath, outPath);
-            FFMPEGExecuter.ExecuteFFMPEG(cmd);
-        }
-
-        public static void ConcatVideosNoReencode(string[] parts, string outPath)
-        {
-            //return String.Format("-y -f concat -safe 0 -i \"{0}\" -c:v libx264 \"{1}\"", partsTxtPath, outPath);
-
-            //convert the .mp4 files to intermediate .TS
-            string cmd2 = "-y -i \"concat:";
-
-            for(int i = 0; i < parts.Length; i++)
-            {
-                string outP = DirectoryHelper.GetParentFolderDir() + "\\ts\\clip" + i + ".ts";
-                string cmd1 = String.Format("-y -i \"{0}\" -c copy -bsf:v h264_mp4toannexb -f mpegts \"{1}\"", parts[i], outP);
-                FFMPEGExecuter.ExecuteFFMPEG(cmd1);
-
-                cmd2 += outP;
-                if( i < parts.Length - 1)
-                {
-                    cmd2 += "|";
-                }
-            }
-
-            //concatenate the TS files and convert the output back to mp4
-            string options = "-bsf:a aac_adtstoasc -movflags faststart";
-            cmd2 += String.Format("\" -c copy -video_track_timescale 25 {0} -f mp4 -threads 1 \"{1}\"", options, outPath);
-            FFMPEGExecuter.ExecuteFFMPEG(cmd2);
-        }
-
-        public static string OverlayAudio(string video, string audio, string outPath)
+        public static string OverlayAudio(string video, string audio, string outPath, float volume)
         {
             //NOTE - If audio ends before the video it will cut the video short. Can fix this with padding video to length of audio at some point
-            return String.Format("-y -i \"{0}\" -i \"{1}\" -c copy -shortest -map 0:0 -map 1:0 \"{2}\"", video, audio, outPath );
-        }
+            return String.Format("-y -i \"{0}\" -i \"{1}\" -c copy -shortest -map 0:0 -map 1:0 \"{2}\"", video, audio, outPath);
 
+        }
     }
 }

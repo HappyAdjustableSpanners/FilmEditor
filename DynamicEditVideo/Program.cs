@@ -14,7 +14,9 @@ namespace DynamicEditVideo
         static void Main(string[] args)
         {
             SetupFFMPEGWrapper();
-            DirectoryHelper.ClearDir(DirectoryHelper.GetParentFolderDir() + "\\output");
+
+            // Clean up 
+            DirectoryHelper.ClearDir(DirectoryHelper.GetParentFolderDir() + "\\output");       
 
             // for each folder
             string dir = DirectoryHelper.GetParentFolderDir() + "\\videos";
@@ -25,8 +27,8 @@ namespace DynamicEditVideo
                 List<Video> videos = GetVideos(folders[i]);
 
                 // Specify edit params
-                EditConfig editConfig = new EditConfig(EditingPatterns.EditingPreset.Relaxed, videos, DirectoryHelper.GetParentFolderDir() + "\\resources\\audio\\music.mp3", DirectoryHelper.GetParentFolderDir() + "\\resources\\introoutro\\intro.mp4", DirectoryHelper.GetParentFolderDir() + "\\resources\\introoutro\\outro.mp4");
-                EditingHelper.Edit(editConfig, i);
+                //EditConfig editConfig = new EditConfig(EditingPatterns.EditingPreset.Relaxed, videos, DirectoryHelper.GetParentFolderDir() + "\\resources\\audio\\music.mp3", DirectoryHelper.GetParentFolderDir() + "\\resources\\introoutro\\intro.mp4", DirectoryHelper.GetParentFolderDir() + "\\resources\\introoutro\\outro.mp4");
+                //EditingHelper.Edit(editConfig, i);
 
                 // Specify edit params
                 EditConfig editConfig2 = new EditConfig(EditingPatterns.EditingPreset.Action, videos, DirectoryHelper.GetParentFolderDir() + "\\resources\\audio\\music.mp3", DirectoryHelper.GetParentFolderDir() + "\\resources\\introoutro\\intro.mp4", DirectoryHelper.GetParentFolderDir() + "\\resources\\introoutro\\outro.mp4");

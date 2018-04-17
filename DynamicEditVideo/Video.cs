@@ -14,7 +14,7 @@ namespace DynamicEditVideo
         public Video(string _path)
         {
             path = _path;
-            length = EditingHelper.GetVideoDuration(path);
+            length = FFMPEGCommands.GetVideoDuration(path);
         }
 
      

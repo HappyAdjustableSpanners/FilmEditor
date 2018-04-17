@@ -8,8 +8,8 @@ namespace DynamicEditVideo
 {
     public class EditingPatterns
     {
-        public static int[] actionPattern  = { 2, 3, 2, 3, 3 };
-        public static int[] relaxedPattern = { 4, 5, 3, 4, 3 };
+        public static int[] actionPattern  = { 2, 1, 2, 2, 2 };
+        public static int[] relaxedPattern = { 4, 3, 3, 4, 3 };
         public enum EditingPreset { Action, Relaxed }
 
         public static int GetPatternStep(EditingPreset editPreset, int index)
@@ -31,8 +31,18 @@ namespace DynamicEditVideo
                default:
                     return -1;
             }
+        }
 
-
+        public static int GetPatternLength(EditingPreset preset)
+        {
+            switch (preset)
+            {
+                case EditingPreset.Action:
+                    return actionPattern.Length;
+                case EditingPreset.Relaxed:
+                    return relaxedPattern.Length;
+            }
+            return -1;
         }
     }
 }
